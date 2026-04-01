@@ -6,7 +6,8 @@ Compile the Bash Shell for wasm using emscripten.
 I originally made this as an april fools day joke for a youtube video but
 like... where's the joke? it actually works lol.
 
-https://bash-wasm.ysap.sh
+- website: https://bash-wasm.ysap.sh
+- video: https://www.youtube.com/watch?v=TEq-6AqMFBI
 
 How To
 ------
