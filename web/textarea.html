@@ -1,0 +1,44 @@
+<!doctype html>
+<html>
+	<head>
+		<meta charset="utf-8">
+		<title>Bash wasm test</title>
+                <link rel="stylesheet" href="style.css">
+	</head>
+	<body>
+		<textarea id="input">
+for i in {1..10}; do
+	echo "i is $i"
+done
+		</textarea>
+		<br>
+		<button id="run">Run</button>
+		<br>
+		<pre><code id="output">(output...)</code></pre>
+
+		<script src="./bash.js"></script>
+		<script src="./bash-loader.js" type="module"></script>
+		<script>
+			const inputEl = document.getElementById('input');
+			const runEl = document.getElementById('run');
+			const outputEl = document.getElementById('output');
+
+			runEl.addEventListener('click', async () => {
+				var module = await createBashModule({
+					print(txt) { outputEl.textContent += txt + '\n'; },
+					printErr(txt) {
+						outputEl.textContent += txt + '\n';
+					},
+					noInitialRun: true,
+				});
+
+				outputEl.textContent = '';
+
+				// run the program
+				const text = inputEl.value + '\n';
+				module.FS.writeFile('/script', text);
+				module.callMain(['/script']);
+			});
+		</script>
+	</body>
+</html>

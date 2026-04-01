@@ -1,0 +1,26 @@
+<!doctype html>
+<html>
+	<head>
+		<meta charset="utf-8">
+		<title>Bash wasm test</title>
+                <link rel="stylesheet" href="style.css">
+	</head>
+	<body>
+		(check console)
+
+<script type="text/bash">
+for i in {1..3}; do
+	echo "i is $i"
+done
+</script>
+
+<script type="text/bash">
+for i in {6..9}; do
+	echo "i is $i"
+done
+</script>
+
+		<script src="./bash.js"></script>
+		<script src="./bash-loader.js" type="module"></script>
+	</body>
+</html>

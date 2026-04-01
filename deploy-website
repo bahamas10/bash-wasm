@@ -1,0 +1,3 @@
+#!/bin/sh
+
+rsync -avh --copy-links --progress web/ web:/var/www/bash-wasm.ysap.sh/

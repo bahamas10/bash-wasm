@@ -1,0 +1,21 @@
+<!doctype html>
+<html>
+	<head>
+		<meta charset="utf-8">
+		<title>Bash wasm test</title>
+                <link rel="stylesheet" href="style.css">
+	</head>
+	<body>
+		(check the console)
+		<script src="./bash.js"></script>
+		<script type="module">
+			var module = await createBashModule({
+				print(txt) { console.log(txt); },
+				printErr(txt) { console.log(txt); },
+				noInitialRun: true,
+			});
+			module.FS.writeFile('/script', 'echo hello world\n');
+			module.callMain(['/script']);
+		</script>
+	</body>
+</html>

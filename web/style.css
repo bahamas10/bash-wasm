@@ -1,0 +1,8 @@
+body {
+	background-color: #222;
+	color: #eee;
+}
+
+a, a:hover, a:visited, a:active {
+	color: #37D0F6;
+}
