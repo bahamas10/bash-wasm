@@ -2,23 +2,131 @@
 <html>
 	<head>
 		<meta charset="utf-8">
-		<title>Bash wasm test</title>
+		<title>This Website is Built with Bash</title>
                 <link rel="stylesheet" href="style.css">
 	</head>
 	<body>
-		<h1>Bash on wasm</h1>
 
-		<ul>
-			<li><a href="simple.html">simple.html</a> - simplest example</li>
-			<li><a href="loader.html">loader.html</a> - example using the bash-loader.js</li>
-			<li><a href="textarea.html">textarea.html</a> - text area bash parser</li>
-			<li><a href="final.html">final.html</a> - simple website rendered with bash</li>
-		</ul>
+		<div id="container">
+			<h1>This Website is Built with Bash</h1>
 
-		<h2>Source Code</h2>
-		<a href="https://github.com/bahamas10/bash-wasm">https://github.com/bahamas10/bash-wasm</a>
+			The Bash shell has been compiled to <a
+				href="https://webassembly.org">wasm</a> with <a
+				href="https://emscripten.org">emscripten</a>.  A
+			small JavaScript library is then used to "load" the bash
+			scripts and run them.  To see more information check the
+			links below or view the source code of this page.
 
-		<h2>Video explanation</h2>
-		<a href="https://www.youtube.com/watch?v=TEq-6AqMFBI">https://www.youtube.com/watch?v=TEq-6AqMFBI</a>
+			<!-- example script and output -->
+			<h2>Example Script</h2>
+			<textarea rows="23" cols="70" id="input">
+echo "Hello from bash!"
+echo "Bash Version: $BASH_VERSION"
+echo "Compiled for: $MACHTYPE"
+echo
+echo "My PID is $$, my PWD is $PWD"
+echo
+echo "You won't see this" &gt; /dev/null
+
+echo -n "I can count:"
+for i in {1..3}; do
+	echo -n " $i"
+done
+echo
+
+if [[ $MACHTYPE == *emscripten* ]]; then
+	echo "Hello Web!"
+fi
+
+# uncomment these commands to see all variables
+# set or all builtins (respectively)
+# set
+# compgen -b
+</textarea>
+			<br>
+			<button id="run">Run</button>
+			<input checked type="checkbox" id="stdout">stdout</input>
+			<input type="checkbox" id="stderr">stderr</input>
+			<br>
+			<pre class="terminal"><code id="output">if you can read this something broke :(</code></pre>
+
+			<h2>Source Code</h2>
+			<a href="https://github.com/bahamas10/bash-wasm">https://github.com/bahamas10/bash-wasm</a>
+
+			<h2>Video explanation</h2>
+			See how this project was created here:
+			<a href="https://www.youtube.com/watch?v=TEq-6AqMFBI">https://www.youtube.com/watch?v=TEq-6AqMFBI</a>
+
+			<!-- the list of example pages, generated with bash -->
+			<h3>Pages built during the video</h3>
+			<ul id="example-pages"></ul>
+
+			<h2>Known Limitations</h2>
+			<ul>
+				<li>No fork/exec/wait - this means no pipes :(.
+					This is due to limitations with
+					emscripten and JavaScript only operating
+					on a single thread.</li>
+				<li>Unimplemented syscall errors emitted to stderr - yeah those just happen i guess lol</li>
+			</ul>
+
+			<hr>
+			<pre><code id="footer"></code></pre>
+
+		</div>
+		<script src="./bash.js"></script>
+		<script src="./bash-loader.js" type="module"></script>
+		<script type="text/bash">
+			# all stdout and stderr will go to the console by
+			# default, which means we'll use the new "web" builtin to
+			# write/modify the DOM
+
+			# Create the list of "example" pages
+			declare -A pages=(
+			    [simple.html]="simplest 'hello world' example"
+			    [loader.html]="example using the bash-loader.js library"
+			    [textarea.html]="drop bash into a text area and run it"
+			    [final.html]="simple website rendered with bash"
+			)
+			for page in "${!pages[@]}"; do
+				desc=${pages[$page]}
+
+				output="<li><a href=\"$page\">$page</a> - $desc</li>"
+
+				web dom.appendHTML '#example-pages' "$output"
+			done
+		</script>
+		<script type="text/bash" data-stdout="#footer">
+			# all stdout will go (as text) to the element above, stderr to the console (default)
+
+			# Multiple script tags are supported - create the footer section
+			echo "bash version: $BASH_VERSION"
+			printf 'page rendered: %(%Y-%m-%dT%H:%M:%S%z)T\n' -1
+			echo
+			echo 'created by Dave Eddy (@yousuckatprogramming)'
+		</script>
+		<script type="module">
+			// wire up the text area to run the actual script
+			const inputEl = document.getElementById('input');
+			const runEl = document.getElementById('run');
+			const outputEl = document.getElementById('output');
+			const stdoutEl = document.getElementById('stdout');
+			const stderrEl = document.getElementById('stderr');
+
+			async function runTextArea() {
+				var stdout = stdoutEl.checked ? '#output' : null;
+				var stderr = stderrEl.checked ? '#output' : null;
+				outputEl.textContent = '';
+
+				await runBashScript(inputEl.value, stdout, stderr);
+			}
+
+			runEl.addEventListener('click', runTextArea);
+			stdoutEl.addEventListener('change', runTextArea);
+			stderrEl.addEventListener('change', runTextArea);
+
+			// run this as soon as the website loads
+			await runTextArea();
+		</script>
 	</body>
 </html>

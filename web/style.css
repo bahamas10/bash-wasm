@@ -3,6 +3,22 @@ body {
 	color: #eee;
 }
 
+#container {
+	max-width: 800px;
+	margin-right: auto;
+	margin-left: auto;
+}
+
+.terminal {
+	padding: 5px;
+	border: 2px solid green;
+}
+
+textarea {
+	font-family: monospace;
+	font-size: 12px;
+}
+
 a, a:hover, a:visited, a:active {
 	color: #37D0F6;
 }

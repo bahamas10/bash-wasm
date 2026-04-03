@@ -6,16 +6,17 @@
                 <link rel="stylesheet" href="style.css">
 	</head>
 	<body>
-		<textarea id="input">
+		<div id="container">
+			<textarea id="input">
 for i in {1..10}; do
 	echo "i is $i"
 done
-		</textarea>
-		<br>
-		<button id="run">Run</button>
-		<br>
-		<pre><code id="output">(output...)</code></pre>
-
+			</textarea>
+			<br>
+			<button id="run">Run</button>
+			<br>
+			<pre><code id="output">(output...)</code></pre>
+		</div>
 		<script src="./bash.js"></script>
 		<script src="./bash-loader.js" type="module"></script>
 		<script>
