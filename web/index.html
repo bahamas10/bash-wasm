@@ -19,7 +19,7 @@
 
 			<!-- example script and output -->
 			<h2>Example Script</h2>
-			<textarea rows="23" cols="70" id="input">
+			<textarea id="input">
 echo "Hello from bash!"
 echo "Bash Version: $BASH_VERSION"
 echo "Compiled for: $MACHTYPE"
@@ -38,10 +38,17 @@ if [[ $MACHTYPE == *emscripten* ]]; then
 	echo "Hello Web!"
 fi
 
+echo "getrandom: RANDOM=$RANDOM SRANDOM=$SRANDOM"
+
 # uncomment these commands to see all variables
 # set or all builtins (respectively)
 # set
 # compgen -b
+
+# there is also a "web" builtin added to this build that
+# can modify the dom
+# web dom.write '#footer' "hello $$"
+# web document.title "new web browser title"
 </textarea>
 			<br>
 			<button id="run">Run</button>
@@ -53,7 +60,7 @@ fi
 			<h2>Source Code</h2>
 			<a href="https://github.com/bahamas10/bash-wasm">https://github.com/bahamas10/bash-wasm</a>
 
-			<h2>Video explanation</h2>
+			<h2>Video Explanation</h2>
 			See how this project was created here:
 			<a href="https://www.youtube.com/watch?v=TEq-6AqMFBI">https://www.youtube.com/watch?v=TEq-6AqMFBI</a>
 
@@ -81,7 +88,7 @@ fi
 			# default, which means we'll use the new "web" builtin to
 			# write/modify the DOM
 
-			# Create the list of "example" pages
+			# create the list of "example" pages
 			declare -A pages=(
 			    [simple.html]="simplest 'hello world' example"
 			    [loader.html]="example using the bash-loader.js library"
@@ -97,11 +104,14 @@ fi
 			done
 		</script>
 		<script type="text/bash" data-stdout="#footer">
-			# all stdout will go (as text) to the element above, stderr to the console (default)
+			# all stdout will go (as text) to the element above,
+			# stderr to the console (default)
 
-			# Multiple script tags are supported - create the footer section
+			# multiple script tags are supported - create the footer section:
+
+			printf -v now '%(%Y-%m-%dT%H:%M:%S%z)T' -1
 			echo "bash version: $BASH_VERSION"
-			printf 'page rendered: %(%Y-%m-%dT%H:%M:%S%z)T\n' -1
+			echo "page rendered: $now"
 			echo
 			echo 'created by Dave Eddy (@yousuckatprogramming)'
 		</script>
