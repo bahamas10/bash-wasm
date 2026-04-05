@@ -49,6 +49,11 @@ echo "getrandom: RANDOM=$RANDOM SRANDOM=$SRANDOM"
 # can modify the dom
 # web dom.write '#footer' "hello $$"
 # web document.title "new web browser title"
+
+# external tools + forking doesn't work in this context, you can emulate some
+# simple commands below in pure bash (exposed as functions).
+# ls() { echo *; }
+# cd /; pwd; ls
 </textarea>
 			<br>
 			<button id="run">Run</button>
